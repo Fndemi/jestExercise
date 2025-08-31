@@ -6,4 +6,10 @@ function add(a, b) {
 }
 
 
-module.exports = { add };
+
+
+function isTaskComplete(task) {
+  if (!task || typeof task !== "object") return false;
+  return task.done === true;
+}
+module.exports = { add, isTaskComplete };
