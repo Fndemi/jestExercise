@@ -1,4 +1,4 @@
-const { add, isTaskComplete } = require("../src/utils");
+const { add, isTaskComplete, isTaskOverdue } = require("../src/utils");
 
 describe("add()", () => {
   test("adds two positive numbers", () => {
@@ -18,10 +18,6 @@ describe("add()", () => {
   });
 });
 
-
-
-
-
 describe("isTaskComplete()", () => {
   test("returns true if done === true", () => {
     expect(isTaskComplete({ title: "Laundry", done: true })).toBe(true);
@@ -37,5 +33,35 @@ describe("isTaskComplete()", () => {
 
   test("returns false if task is not an object", () => {
     expect(isTaskComplete(null)).toBe(false);
+  });
+});
+
+describe("isTaskOverdue()", () => {
+  test("returns true if dueDate is before today", () => {
+    expect(
+      isTaskOverdue({ dueDate: "2024-02-01" }, "2024-02-02")
+    ).toBe(true);
+  });
+
+  test("returns false if dueDate is after today", () => {
+    expect(
+      isTaskOverdue({ dueDate: "2024-02-03" }, "2024-02-02")
+    ).toBe(false);
+  });
+
+  test("returns false if dueDate is exactly today", () => {
+    expect(
+      isTaskOverdue({ dueDate: "2024-02-02" }, "2024-02-02")
+    ).toBe(false);
+  });
+
+  test("throws on invalid date format", () => {
+    expect(() =>
+      isTaskOverdue({ dueDate: "not-a-date" }, "2024-02-02")
+    ).toThrow("Invalid date format");
+  });
+
+  test("returns false if no dueDate is given", () => {
+    expect(isTaskOverdue({}, "2024-02-02")).toBe(false);
   });
 });
